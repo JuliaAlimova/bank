@@ -1,0 +1,21 @@
+.button {
+  padding: 20px 140px;
+  color: #775ce5;
+  border-radius: 12px;
+  border: 1px solid #775ce5;
+  background: #fff;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s, opacity 0.3s;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.button:hover {
+  background: #775ce5;
+  color: #fff;
+}
+
+.button:active {
+  opacity: 0.9;
+}

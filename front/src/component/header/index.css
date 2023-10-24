@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+  padding: 0 20px;
+}
+
+.statusBar {
+  display: flex;
+  padding: 18px 26px 14px 27px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.time {
+  color: #000;
+  font-family: SF Pro Text;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 22px;
+  letter-spacing: -0.408px;
+}
+
+.statusBar__icons {
+  display: flex;
+  gap: 7.4px;
+}

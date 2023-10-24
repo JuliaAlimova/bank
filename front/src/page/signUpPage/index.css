@@ -1,0 +1,35 @@
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  max-width: 353px;
+  margin-top: 18px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.user-exists-warning {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  background: rgba(242, 136, 61, 0.1);
+  color: #f2883d;
+}
+
+.error-warning {
+  padding: 16px;
+  border-radius: 10px;
+  color: #f23152;
+  border: 1px solid #f23152;
+  margin-top: 8px;
+}

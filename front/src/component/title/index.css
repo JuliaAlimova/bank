@@ -1,0 +1,36 @@
+.title {
+  display: flex;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.title-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.big {
+  font-size: 42px;
+  font-weight: 600;
+}
+
+.bigSubText {
+  font-size: 20px;
+}
+
+.standart {
+  color: #121212;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.standartSubText {
+  color: #939199;
+}
+
+.small {
+  font-size: 16px;
+}

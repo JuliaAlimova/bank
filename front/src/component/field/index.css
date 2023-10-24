@@ -1,0 +1,64 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #1d1d1f;
+}
+
+.field.invalid {
+  color: #f23152;
+}
+
+.field.invalid .field__input {
+  border: 1px solid #f23152;
+}
+
+.field__input {
+  border: 1px solid #e9e8eb;
+  padding: 16px;
+  border-radius: 12px;
+  transition: border-color 0.3s;
+  padding-right: calc(18px + 18px + 18px);
+}
+
+.field__input:focus {
+  border: 1px solid #775ce5;
+  padding: 20px 16px;
+  padding-right: calc(18px + 18px + 18px);
+}
+.field__input::placeholder {
+  color: #939199;
+}
+
+.field__wrapper {
+  width: 100%;
+  display: grid;
+  position: relative;
+}
+
+.field__icon {
+  display: block;
+  height: 18px;
+  width: 18px;
+  background-size: cover;
+  cursor: pointer;
+  transition: opacity 0.7s;
+  position: absolute;
+  right: 18px;
+}
+
+.field__icon:hover {
+  opacity: 0.7;
+}
+
+.field__icon.show {
+  background-image: url("/public/svg/password-show.svg");
+}
+
+.field__icon.hide {
+  background-image: url("/public/svg/password-hide.svg");
+}
+
+.error-text {
+  margin-top: 8px;
+}
