@@ -17,19 +17,16 @@ function SignupConfirmPage(): React.ReactElement {
     const { state } = useAuth();
     const token = state.token;
 
-
     const handleCodeChange = (value: string, isValid: boolean) => {
         setCode(value);
         setEmptyFields(false)
     };
-
 
     const pageStyles = {
         marginBottom: '32px',
     };
 
     const handleSignupConfirm = async () => {
-
 
         if (code.trim() === '') {
             setEmptyFields(true);
@@ -55,7 +52,6 @@ function SignupConfirmPage(): React.ReactElement {
                     payload: {
                         token: data.token,
                         user: data.user,
-                        isConfirm: data.user.isConfirm
                     }
                 });
 
@@ -69,7 +65,6 @@ function SignupConfirmPage(): React.ReactElement {
             console.error(e);
         }
     }
-
 
     return (
         <Page backButton={true} headerStyle={pageStyles} text='Confirm account' subText='Write the code you received' size={sizeTitle.standart}>

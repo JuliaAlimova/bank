@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
 import { AuthRoute } from "./component/authRoute";
 import { useAuth } from "./contexts/AuthContext";
 import WellcomePage from "./page/wellcomePage";
@@ -9,47 +8,55 @@ import BalancePage from "./page/balancePage";
 
 // SigninPage, RecoveryPage, RecoveryConfirmPage, NotificationsPage, SettingsPage, RecivePage, SendPage, TransactionPage
 import { AuthProvider } from "./contexts/AuthContext";
+import { StrictMode } from "react";
 
 function App() {
 
   const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const { state } = useAuth();
+
     if (state.isLogged) {
-      return <>{children}</>;
-    } else {
-      return <Navigate to="/signup" replace />;
+      return <SignupConfirmPage />;
     }
+
+    if (state.user.isConfirm) {
+      return <BalancePage />;
+    }
+
+    return <SignUpPage />
+
   }
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            index
-            element={
-              <AuthRoute>
-                <WellcomePage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <AuthRoute>
-                <SignUpPage />
-              </AuthRoute>
-            }
-          />
-          <Route
-            path="/signup-confirm"
-            element={
-              <PrivateRoute>
-                <SignupConfirmPage />
-              </PrivateRoute>
-            }
-          />
-          {/* <Route
+    <StrictMode>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              index
+              element={
+                <AuthRoute>
+                  <WellcomePage />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <AuthRoute>
+                  <SignUpPage />
+                </AuthRoute>
+              }
+            />
+            <Route
+              path="/signup-confirm"
+              element={
+                <PrivateRoute>
+                  <SignupConfirmPage />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
                 path="/signin"
                 element={
                   <AuthRoute>
@@ -73,15 +80,15 @@ function App() {
                   </AuthRoute>
                 }
               /> */}
-          <Route
-            path="/balance"
-            element={
-              <PrivateRoute>
-                <BalancePage />
-              </PrivateRoute>
-            }
-          />
-          {/* <Route
+            <Route
+              path="/balance"
+              element={
+                <PrivateRoute>
+                  <BalancePage />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
                 path="/notifications"
                 element={
                   <PrivateRoute>
@@ -122,9 +129,10 @@ function App() {
                 }
               />
               <Route path="*" Component={Error} />  */}
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider >
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider >
+    </StrictMode>
   );
 }
 

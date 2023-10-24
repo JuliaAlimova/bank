@@ -35,9 +35,6 @@ class Confirm {
       (item) => item.code === codeNumber,
     )
 
-    console.log('Code to compare:', code)
-    console.log('Found object:', obj)
-
     return obj ? obj.email : null
   }
 

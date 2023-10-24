@@ -88,9 +88,7 @@ router.post('/signup-confirm', function (req, res) {
     session.isLogged = true
     session.user.isConfirm = true
 
-    return res.status(200).json({
-      session,
-    })
+    return res.status(200).json(session)
   } catch (error) {
     return res.status(400).json({
       message: error.message,

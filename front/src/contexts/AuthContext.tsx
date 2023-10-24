@@ -4,13 +4,12 @@ const initialState = {
     token: null as string | null,
     user: null as any,
     isLogged: false as boolean | undefined,
-    isConfirm: false as boolean | undefined,
 };
 
 type State = typeof initialState;
 
 type Action =
-    | { type: 'LOGIN'; payload: { token: string; user: any; isLogged?: boolean; isConfirm?: boolean } }
+    | { type: 'LOGIN'; payload: { token: string; user: any; isLogged?: boolean } }
     | { type: 'LOGOUT' };
 
 const AuthContext = createContext<{
@@ -26,7 +25,6 @@ function authReducer(state: State, action: Action): State {
                 token: action.payload.token,
                 user: action.payload.user,
                 isLogged: action.payload.isLogged,
-                isConfirm: action.payload.isConfirm,
             };
         case 'LOGOUT':
             return initialState;
