@@ -15,15 +15,21 @@
   gap: 20px;
 }
 
-.user-exists-warning {
+.warning {
   display: flex;
-  padding: 16px;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
   border-radius: 10px;
   background: rgba(242, 136, 61, 0.1);
   color: #f2883d;
+  padding: 16px;
+  gap: 8px;
+}
+
+.user-warning {
+  display: flex;
+  gap: 8px;
 }
 
 .error-warning {
@@ -32,4 +38,9 @@
   color: #f23152;
   border: 1px solid #f23152;
   margin-top: 8px;
+}
+
+.link {
+  color: #775ce5;
+  text-align: center;
 }

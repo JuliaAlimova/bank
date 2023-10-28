@@ -17,6 +17,7 @@ export interface ButtonProps {
     textButton?: string,
     onClick?: () => void,
     backButton?: boolean,
+    disabled?: boolean,
 }
 
 export interface FieldProps {
@@ -25,6 +26,5 @@ export interface FieldProps {
     type: string,
     label: string,
     formType?: 'signIn' | 'signUp';
-    maxLength?: number;
     onChange?: (value: string, isValid: boolean) => void;
 }

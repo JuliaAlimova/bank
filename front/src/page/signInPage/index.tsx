@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './index.css';
 import { useAuth } from '../../component/authRoute';
 import { Page } from '../../component/page';
 import { Button } from '../../component/button';
 import { Field } from '../../component/field';
 import { sizeTitle } from '../../contexts/commonProps';
 
-function SignUpPage(): React.ReactElement {
+function SignInPage(): React.ReactElement {
     const navigate = useNavigate();
     const { dispatch } = useAuth();
 
@@ -15,31 +14,32 @@ function SignUpPage(): React.ReactElement {
         marginBottom: '32px',
     };
 
-    const [userExists, setUserExists] = useState(false);
-    const [userExistsMessage, setUserExistsMessage] = useState('');
+    const [errorAuth, setErrorAuth] = useState(false);
+    const [errorAuthMessage, setErrorAuthMessage] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [emptyFields, setEmptyFields] = useState(false);
 
+    const { state } = useAuth();
+    const token = state.token;
+
+    const errorAuthComponent = <Link className='link' to={'/signup-confirm'}>Confirm email</Link>;
+
     const handleEmailChange = (value: string, isValid: boolean) => {
         setEmail(value);
-        setEmptyFields(false)
         setEmailError(!isValid);
-        setUserExists(false);
-        setUserExistsMessage('');
+        setErrorAuth(false);
     };
 
     const handlePasswordChange = (value: string, isValid: boolean) => {
         setPassword(value);
-        setEmptyFields(false)
         setPasswordError(!isValid);
-        setUserExists(false);
-        setUserExistsMessage('');
+        setErrorAuth(false);
     };
 
-    const handleSignup = async () => {
+    const handleSignin = async () => {
 
         if (email.trim() === '' || password.trim() === '') {
             setEmptyFields(true);
@@ -49,7 +49,7 @@ function SignUpPage(): React.ReactElement {
         }
 
         try {
-            const res = await fetch("http://localhost:4000/signup", {
+            const res = await fetch("http://localhost:4000/signin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -57,18 +57,13 @@ function SignUpPage(): React.ReactElement {
                 body: JSON.stringify({
                     email: email,
                     password: password,
+                    token: token,
                 }),
             });
 
             const data = await res.json();
 
             if (res.ok) {
-
-                localStorage.setItem('authState', JSON.stringify({
-                    token: data.token,
-                    user: data.user
-                }));
-
                 dispatch({
                     type: 'LOGIN',
                     payload: {
@@ -77,13 +72,15 @@ function SignUpPage(): React.ReactElement {
                     }
                 });
 
+                localStorage.setItem('authState', JSON.stringify(data));
+
+                setErrorAuthMessage('');
+                setErrorAuth(false);
                 setEmptyFields(false);
-                setUserExists(false);
-                setUserExistsMessage('');
-                navigate('/signup-confirm');
+                navigate('/balance');
             } else {
-                setUserExists(true);
-                setUserExistsMessage(data.message);
+                setErrorAuthMessage(data.message)
+                setErrorAuth(true)
             }
         } catch (e) {
             console.error(e);
@@ -91,28 +88,31 @@ function SignUpPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Sign up' subText='Choose a registration method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={pageStyles} text='Sign in' subText='Select login method' size={sizeTitle.standart}>
             <React.Fragment>
                 <form className='form'>
-                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signUp' onChange={handleEmailChange} />
-                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signUp' onChange={handlePasswordChange} />
-                    <div>{'Already have an account? '}
-                        <Link className='link' to={"/signin"}> Sign In</Link>
+                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} />
+                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signIn' onChange={handlePasswordChange} />
+                    <div>{'Forgot your password? '}
+                        <Link className='link' to={"/recovery"}>Restore</Link>
                     </div>
                     <div className='buttons'>
-                        <Button onClick={handleSignup} textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
+                        <Button onClick={handleSignin} textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
                     </div>
                 </form>
-                {userExists && (
-                    <div className='warning'>
+                {errorAuth && (
+                    <div className="warning">
                         <div className="user-warning">
                             <img src='/svg/danger.svg' alt='danger' />
-                            <span>{userExistsMessage}</span>
+                            <span>{errorAuthMessage}</span>
                         </div>
+                        {errorAuthMessage.includes("The email has not been confirmed") && (
+                            <div>{errorAuthComponent}</div>
+                        )}
                     </div>
                 )}
                 {emptyFields && (
-                    <div className="error-warning">
+                    <div className="warning">
                         <span>Please fill in all the fields</span>
                     </div>
                 )}
@@ -121,4 +121,4 @@ function SignUpPage(): React.ReactElement {
     )
 }
 
-export default SignUpPage
+export default SignInPage

@@ -1,36 +1,42 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Page } from '../../component/page';
 import { Button } from '../../component/button';
 import { Field } from '../../component/field';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../component/authRoute';
 import { sizeTitle } from '../../contexts/commonProps';
 
 function SignupConfirmPage(): React.ReactElement {
     const navigate = useNavigate();
     const { dispatch } = useAuth();
 
-    const [code, setCode] = useState('');
     const [emptyFields, setEmptyFields] = useState(false);
-    const [error, setError] = useState('');
+    const [code, setCode] = useState('');
+    const [codeError, setCodeError] = useState('');
+    const [isValid, setIsValid] = useState(false);
 
     const { state } = useAuth();
     const token = state.token;
 
     const handleCodeChange = (value: string, isValid: boolean) => {
         setCode(value);
-        setEmptyFields(false)
+        setEmptyFields(false);
+        setIsValid(isValid);
     };
 
     const pageStyles = {
         marginBottom: '32px',
     };
 
+    const errorAuthComponent = <Link className='link' to={'/signup'}>Please sign up</Link>;
+
     const handleSignupConfirm = async () => {
 
         if (code.trim() === '') {
             setEmptyFields(true);
             return;
+        } else if (codeError) {
+            return
         }
 
         try {
@@ -45,8 +51,9 @@ function SignupConfirmPage(): React.ReactElement {
                 }),
             });
 
+            const data = await res.json();
+
             if (res.ok) {
-                const data = await res.json();
                 dispatch({
                     type: 'LOGIN',
                     payload: {
@@ -55,11 +62,12 @@ function SignupConfirmPage(): React.ReactElement {
                     }
                 });
 
+                localStorage.setItem('authState', JSON.stringify(data));
+
                 setEmptyFields(false);
                 navigate('/balance');
             } else {
-                const errorData = await res.json();
-                setError(errorData.message);
+                setCodeError(data.message);
             }
         } catch (e) {
             console.error(e);
@@ -69,19 +77,24 @@ function SignupConfirmPage(): React.ReactElement {
     return (
         <Page backButton={true} headerStyle={pageStyles} text='Confirm account' subText='Write the code you received' size={sizeTitle.standart}>
             <React.Fragment>
-                <Field type={'number'} name={'code'} placeholder={'1234'} label={'Code'} maxLength={4} onChange={handleCodeChange} />
-                <Button onClick={handleSignupConfirm} textButton={'Confirm'} />
+                <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} />
+                <Button onClick={handleSignupConfirm} textButton={'Confirm'} disabled={!isValid} />
                 {emptyFields && (
                     <div className="error-warning">
                         <span>Please fill in the field</span>
                     </div>
                 )}
-                {error && (
-                    <div className="error-warning">
-                        <span>{error}</span>
+                {codeError && (
+                    <div className="warning">
+                        <div className="user-warning">
+                            <img src='/svg/danger.svg' alt='danger' />
+                            <span>{codeError}</span>
+                        </div>
+                        {codeError.includes("You are not logged in") && (
+                            <div>{errorAuthComponent}</div>
+                        )}
                     </div>
                 )}
-
             </React.Fragment>
         </Page >
     )
