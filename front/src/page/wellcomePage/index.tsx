@@ -15,14 +15,16 @@ function WellcomePage(): React.ReactElement {
         navigate("/signin");
     };
 
-    const pageStyles = {
+    const headerStyle = {
         background: `url('images/safe.png') no-repeat, url('images/background.png') no-repeat`,
         minHeight: '630px',
     };
-    const marginTopTitle = { marginTop: '54px' };
+    const titleStyle = {
+        marginTop: '54px', color: '#fff'
+    };
 
     return (
-        <Page marginTopTitle={marginTopTitle} headerStyle={pageStyles} text='Hello!' size={sizeTitle.big} subText='Welcome to bank app' >
+        <Page titleStyle={titleStyle} headerStyle={headerStyle} text='Hello!' size={sizeTitle.big} subText='Welcome to bank app' >
             <div className='buttons'>
                 <Button textButton={'Sign Up'} onClick={redirectToSignUp} />
                 <Button textButton={'Sign In'} onClick={redirectToSignIn} />

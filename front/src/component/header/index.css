@@ -3,11 +3,12 @@
   flex-direction: column;
   border-radius: 24px;
   padding: 0 20px;
+  gap: 8px;
 }
 
 .statusBar {
   display: flex;
-  padding: 18px 26px 14px 27px;
+  padding: 18px 6px 14px 7px;
   justify-content: space-between;
   align-items: center;
 }

@@ -1,0 +1,46 @@
+.balance {
+  font-size: 34px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  margin-top: calc((54px + 54px + 32px) - 201px - 34px - 20px);
+}
+
+.subNumber {
+  font-weight: 400;
+}
+
+.balance__control {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 14px;
+}
+
+.balance__action {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.balance__control > a {
+  text-decoration: none;
+  color: #1d1d1f;
+  transition: background-color 0.3s, color 0.3s, opacity 0.3s;
+}
+
+.balance__control > a:hover {
+  opacity: 0.9;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 16px;
+}

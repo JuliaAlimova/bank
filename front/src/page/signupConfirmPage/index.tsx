@@ -16,15 +16,16 @@ function SignupConfirmPage(): React.ReactElement {
     const [isValid, setIsValid] = useState(false);
 
     const { state } = useAuth();
-    const token = state.token;
+    const token = state.token ? state.token : '';
 
     const handleCodeChange = (value: string, isValid: boolean) => {
         setCode(value);
         setEmptyFields(false);
         setIsValid(isValid);
+        setCodeError('');
     };
 
-    const pageStyles = {
+    const headerStyle = {
         marginBottom: '32px',
     };
 
@@ -62,8 +63,9 @@ function SignupConfirmPage(): React.ReactElement {
                     }
                 });
 
-                localStorage.setItem('authState', JSON.stringify(data));
+                localStorage.setItem('authState', JSON.stringify({ data, expirationTime: new Date().getTime() + 60 * 60 * 1000, }));
 
+                setCodeError('');
                 setEmptyFields(false);
                 navigate('/balance');
             } else {
@@ -75,10 +77,10 @@ function SignupConfirmPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Confirm account' subText='Write the code you received' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Confirm account' subText='Write the code you received' size={sizeTitle.standart}>
             <React.Fragment>
-                <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} />
-                <Button onClick={handleSignupConfirm} textButton={'Confirm'} disabled={!isValid} />
+                <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} value={code} />
+                <Button onClick={handleSignupConfirm} textButton={'Confirm'} disabled={!isValid || Boolean(!code)} />
                 {emptyFields && (
                     <div className="error-warning">
                         <span>Please fill in the field</span>

@@ -1,7 +1,7 @@
 .title {
   display: flex;
-  color: #fff;
-  margin-top: 10px;
+  align-items: center;
+  color: #121212;
 }
 
 .title-text {
@@ -22,13 +22,17 @@
 }
 
 .standart {
-  color: #121212;
   font-size: 24px;
   font-weight: 500;
 }
 
 .standartSubText {
   color: #939199;
+}
+
+.medium {
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .small {

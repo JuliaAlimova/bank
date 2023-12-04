@@ -2,8 +2,8 @@ import "./index.css";
 import { useState, useEffect, useCallback } from 'react';
 import { FieldProps } from '../../contexts/commonProps';
 
-export const Field: React.FC<FieldProps> = ({ type, label, name, placeholder, formType, onChange }) => {
-    const [inputValue, setInputValue] = useState('');
+export const Field: React.FC<FieldProps> = ({ value, type, label, name, placeholder, formType, onChange }) => {
+    const [inputValue, setInputValue] = useState(value || '');
     const [isValid, setIsValid] = useState(true);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -77,9 +77,6 @@ export const Field: React.FC<FieldProps> = ({ type, label, name, placeholder, fo
             }
         }
 
-        setInputValue(value);
-
-
         if (!isFocused) {
             setIsValid(inputValid);
         }
@@ -103,6 +100,10 @@ export const Field: React.FC<FieldProps> = ({ type, label, name, placeholder, fo
             setHasError(!!errorText);
         }
     }, [getErrorText, hasError, isFocused]);
+
+    useEffect(() => {
+        setInputValue(value || '');
+    }, [value]);
 
     return (
         <div className={`field ${(!isValid && !isFocused) ? 'invalid' : ''}`}>

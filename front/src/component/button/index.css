@@ -22,3 +22,13 @@
   background: #775ce5;
   color: #fff;
 }
+
+.button-logout {
+  border-color: #f23152;
+  color: #f23152;
+}
+
+.button-logout:hover {
+  background: #f23152;
+  color: #fff;
+}

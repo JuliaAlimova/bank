@@ -7,12 +7,13 @@ import { Field } from '../../component/field';
 import { sizeTitle } from '../../contexts/commonProps';
 
 function SignInPage(): React.ReactElement {
-    const navigate = useNavigate();
-    const { dispatch } = useAuth();
-
-    const pageStyles = {
+    const headerStyle = {
         marginBottom: '32px',
     };
+
+    const navigate = useNavigate();
+    const { dispatch, state } = useAuth();
+    const token = state.token;
 
     const [errorAuth, setErrorAuth] = useState(false);
     const [errorAuthMessage, setErrorAuthMessage] = useState('');
@@ -22,24 +23,25 @@ function SignInPage(): React.ReactElement {
     const [passwordError, setPasswordError] = useState(false);
     const [emptyFields, setEmptyFields] = useState(false);
 
-    const { state } = useAuth();
-    const token = state.token;
-
     const errorAuthComponent = <Link className='link' to={'/signup-confirm'}>Confirm email</Link>;
 
     const handleEmailChange = (value: string, isValid: boolean) => {
         setEmail(value);
         setEmailError(!isValid);
         setErrorAuth(false);
+        setEmptyFields(false)
     };
 
     const handlePasswordChange = (value: string, isValid: boolean) => {
         setPassword(value);
         setPasswordError(!isValid);
         setErrorAuth(false);
+        setEmptyFields(false)
     };
 
-    const handleSignin = async () => {
+    const handleSignin = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
 
         if (email.trim() === '' || password.trim() === '') {
             setEmptyFields(true);
@@ -72,7 +74,7 @@ function SignInPage(): React.ReactElement {
                     }
                 });
 
-                localStorage.setItem('authState', JSON.stringify(data));
+                localStorage.setItem('authState', JSON.stringify({ data, expirationTime: new Date().getTime() + 60 * 60 * 1000, }));
 
                 setErrorAuthMessage('');
                 setErrorAuth(false);
@@ -88,16 +90,16 @@ function SignInPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Sign in' subText='Select login method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Sign in' subText='Select login method' size={sizeTitle.standart}>
             <React.Fragment>
-                <form className='form'>
-                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} />
-                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signIn' onChange={handlePasswordChange} />
+                <form className='form' onSubmit={handleSignin}>
+                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} value={email} />
+                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signIn' onChange={handlePasswordChange} value={password} />
                     <div>{'Forgot your password? '}
                         <Link className='link' to={"/recovery"}>Restore</Link>
                     </div>
                     <div className='buttons'>
-                        <Button onClick={handleSignin} textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
+                        <Button type='submit' textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
                     </div>
                 </form>
                 {errorAuth && (
@@ -112,7 +114,7 @@ function SignInPage(): React.ReactElement {
                     </div>
                 )}
                 {emptyFields && (
-                    <div className="warning">
+                    <div className="error-warning">
                         <span>Please fill in all the fields</span>
                     </div>
                 )}

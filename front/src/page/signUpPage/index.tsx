@@ -11,7 +11,7 @@ function SignUpPage(): React.ReactElement {
     const navigate = useNavigate();
     const { dispatch } = useAuth();
 
-    const pageStyles = {
+    const headerStyle = {
         marginBottom: '32px',
     };
 
@@ -39,16 +39,19 @@ function SignUpPage(): React.ReactElement {
         setUserExistsMessage('');
     };
 
-    const handleSignup = async () => {
+    const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
 
         if (email.trim() === '' || password.trim() === '') {
             setEmptyFields(true);
             return;
         } else if (emailError || passwordError) {
-            return
+            return;
         }
 
         try {
+
             const res = await fetch("http://localhost:4000/signup", {
                 method: "POST",
                 headers: {
@@ -64,10 +67,7 @@ function SignUpPage(): React.ReactElement {
 
             if (res.ok) {
 
-                localStorage.setItem('authState', JSON.stringify({
-                    token: data.token,
-                    user: data.user
-                }));
+                localStorage.setItem('authState', JSON.stringify(data));
 
                 dispatch({
                     type: 'LOGIN',
@@ -85,22 +85,24 @@ function SignUpPage(): React.ReactElement {
                 setUserExists(true);
                 setUserExistsMessage(data.message);
             }
-        } catch (e) {
+        }
+        catch (e) {
             console.error(e);
         }
+
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Sign up' subText='Choose a registration method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Sign up' subText='Choose a registration method' size={sizeTitle.standart}>
             <React.Fragment>
-                <form className='form'>
-                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signUp' onChange={handleEmailChange} />
-                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signUp' onChange={handlePasswordChange} />
+                <form className='form' onSubmit={handleSignup}>
+                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signUp' onChange={handleEmailChange} value={email} />
+                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signUp' onChange={handlePasswordChange} value={password} />
                     <div>{'Already have an account? '}
                         <Link className='link' to={"/signin"}> Sign In</Link>
                     </div>
                     <div className='buttons'>
-                        <Button onClick={handleSignup} textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
+                        <Button type='submit' textButton={'Continue'} disabled={emailError || passwordError || Boolean(!password) || Boolean(!email)} />
                     </div>
                 </form>
                 {userExists && (

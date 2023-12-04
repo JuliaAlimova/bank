@@ -11,7 +11,7 @@ export const BackButton: React.FC = () => {
 
     return (
         <div className="back-button" onClick={backButton}>
-            <img className="back-button" src="/svg/back-button.svg" alt="<" width="24" height="24" />
+            <img src="/svg/back-button.svg" alt="<" width="24" height="24" />
         </div>
     );
 }

@@ -1,13 +1,8 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 
-const currentTime = new Date().getTime();
-const authStateFromLocalStorageStr = localStorage.getItem('authState');
-const authStateFromLocalStorage = authStateFromLocalStorageStr ? JSON.parse(authStateFromLocalStorageStr) : null;
-
-const initialState = authStateFromLocalStorage || {
+const initialState = {
     token: null as string | null,
     user: null as any,
-    expirationTime: currentTime + 60 * 60 * 1000,
 };
 
 type State = typeof initialState;
@@ -46,19 +41,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const parsedState = JSON.parse(savedState);
             const currentTime = new Date().getTime();
 
-            if (currentTime >= parsedState.expirationTime) {
-                dispatch({ type: 'LOGOUT' });
-                localStorage.removeItem('authState');
-            } else {
-                dispatch({
-                    type: 'LOGIN',
-                    payload: {
-                        token: parsedState.token,
-                        user: parsedState.user
+            console.log(parsedState.data.token)
+
+            fetch(`http://localhost:4000?token=${parsedState.data.token}`)
+                .then(response => response.json())
+                .then(userExists => {
+                    if (userExists && currentTime >= parsedState.expirationTime) {
+                        dispatch({ type: 'LOGOUT' });
+                        localStorage.removeItem('authState');
+                    } else if (userExists) {
+                        dispatch({
+                            type: 'LOGIN',
+                            payload: {
+                                token: userExists.token,
+                                user: userExists.user
+                            }
+                        });
+                    } else {
+                        dispatch({
+                            type: 'LOGIN',
+                            payload: {
+                                token: parsedState.data.token,
+                                user: parsedState.data.user
+                            }
+                        });
                     }
+                })
+                .catch(error => {
+                    console.error('Error checking user existence:', error);
+                    dispatch({ type: 'LOGOUT' });
                 });
-            }
         }
+
     }, [dispatch]);
 
     return (

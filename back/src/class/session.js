@@ -6,9 +6,10 @@ class Session {
     this.user = {
       email: user.email,
       isConfirm: user.isConfirm,
+      isLogged: user.isLogged,
       id: user.id,
+      balance: 0,
     }
-    this.isLogged = false
   }
 
   static generateCode = () => {
@@ -35,11 +36,43 @@ class Session {
     return session
   }
 
-  static get = (token) => {
+  static getForUser = (token) => {
     return (
       this.#list.find((item) => item.token === token) ||
       null
     )
+  }
+
+  static regenerateToken = (email) => {
+    const existingSession = this.#list.find(
+      (item) =>
+        item.user.email === String(email).toLowerCase(),
+    )
+
+    if (existingSession) {
+      existingSession.token = Session.generateCode()
+      return existingSession.token
+    }
+
+    return null
+  }
+
+  static updateBalance(userEmail, amount) {
+    const session = this.#list.find(
+      (session) =>
+        session.user.email ===
+        String(userEmail).toLowerCase(),
+    )
+
+    if (session) {
+      const newBalance = (
+        Number(session.user.balance) + Number(amount)
+      ).toFixed(2)
+      session.user.balance = newBalance
+      return newBalance
+    }
+
+    return null
   }
 
   static getList = () => this.#list

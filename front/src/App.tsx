@@ -9,25 +9,34 @@ import SignIpPage from "./page/signInPage";
 import BalancePage from "./page/balancePage";
 import RecoveryPage from "./page/recoveryPage";
 import RecoveryConfirmPage from "./page/recoveryConfirmPage";
+import SettingsPage from "./page/settingsPage";
+import RecivePage from "./page/recivePage";
 
-// NotificationsPage, SettingsPage, RecivePage, SendPage, TransactionPage
+// NotificationsPage, RecivePage, SendPage, TransactionPage
 
 function App() {
 
   const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const { state } = useAuth();
 
-    if (state.user) {
-      if (state.user.isConfirm) {
-        return <BalancePage />;
-      } else if (!state.user.isLogged) {
-        return <SignUpPage />;
-      } else {
-        return <SignupConfirmPage />
-      }
-    } else {
+    console.log(state)
+
+    if (state.token && state.user.isConfirm) {
       return children
     }
+
+    if (state.user) {
+      if (!state.user.isLogged) {
+        return <SignUpPage />;
+      } else if (!state.user.isConfirm) {
+        return <SignupConfirmPage />;
+      } else {
+        return <BalancePage />
+      }
+    } else {
+      return <WellcomePage />
+    }
+
   }
 
   return (
@@ -98,23 +107,24 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route
-                path="/settings"
-                element={
-                  <PrivateRoute>
-                    <SettingsPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/recive"
-                element={
-                  <PrivateRoute>
-                    <RecivePage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
+              */}
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <SettingsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/recive"
+            element={
+              <PrivateRoute>
+                <RecivePage />
+              </PrivateRoute>
+            }
+          />
+          {/*<Route
                 path="/send"
                 element={
                   <PrivateRoute>

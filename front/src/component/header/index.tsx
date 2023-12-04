@@ -1,10 +1,10 @@
 import getCurrentTime from "../../util/getCurrentTime";
 import { Title } from '../title';
 import { BackButton } from '../../component/back-button';
-import { CommonProps, ButtonProps } from '../../contexts/commonProps';
+import { CommonProps, ButtonProps, TitleProps } from '../../contexts/commonProps';
 import './index.css';
 
-export const Header: React.FC<CommonProps & ButtonProps> = ({ backButton, headerStyle, marginTopTitle, size, text, subText }) => {
+export const Header: React.FC<CommonProps & ButtonProps & TitleProps> = ({ isNotification, isSettings, backButton, backButtonTitle, headerStyle, titleStyle, size, text, subText }) => {
     const time: string = getCurrentTime();
 
     const isBackButton: React.FC = () => {
@@ -24,7 +24,7 @@ export const Header: React.FC<CommonProps & ButtonProps> = ({ backButton, header
                 </div>
             </div>
             {isBackButton({ backButton })}
-            <Title marginTopTitle={marginTopTitle} size={size} text={text} subText={subText} />
+            <Title backButtonTitle={backButtonTitle} isNotification={isNotification} isSettings={isSettings} titleStyle={titleStyle} size={size} text={text} subText={subText} />
         </header>
     )
 }

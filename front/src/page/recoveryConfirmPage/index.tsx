@@ -11,7 +11,7 @@ function RecoveryConfirmPage(): React.ReactElement {
     const { state } = useAuth();
     const token = state.token;
 
-    const pageStyles = {
+    const headerStyle = {
         marginBottom: '32px',
     };
 
@@ -26,15 +26,18 @@ function RecoveryConfirmPage(): React.ReactElement {
         setCode(value);
         setEmptyFields(false);
         setIsValid(isValid);
+        setCodeError('');
     };
 
     const handlePasswordChange = (value: string, isValid: boolean) => {
         setPassword(value);
-        setEmptyFields(false)
+        setEmptyFields(false);
         setPasswordError(!isValid);
     };
 
-    const handleRecoveryConfirm = async () => {
+    const handleRecoveryConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
 
         if (password.trim() === '' || code.trim() === '') {
             setEmptyFields(true);
@@ -60,8 +63,11 @@ function RecoveryConfirmPage(): React.ReactElement {
             const data = await res.json();
 
             if (res.ok) {
+                localStorage.setItem('authState', JSON.stringify({ data, expirationTime: new Date().getTime() + 60 * 60 * 1000, }));
 
                 setEmptyFields(false);
+                setPasswordError(false);
+                setIsValid(false);
                 navigate('/balance');
             } else {
                 setCodeError(data.message);
@@ -72,15 +78,15 @@ function RecoveryConfirmPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Recover password' subText='Write the code you received' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Recover password' subText='Write the code you received' size={sizeTitle.standart}>
             <React.Fragment>
-                <form className='form'>
+                <form className='form' onSubmit={handleRecoveryConfirm}>
 
-                    <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} />
-                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'New password'} formType='signUp' onChange={handlePasswordChange} />
+                    <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} value={code} />
+                    <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'New password'} formType='signUp' onChange={handlePasswordChange} value={password} />
 
                     <div className='buttons'>
-                        <Button onClick={handleRecoveryConfirm} textButton={'Restore password'} disabled={!isValid || passwordError || Boolean(!password)} />
+                        <Button textButton={'Restore password'} disabled={!isValid || passwordError || Boolean(!password)} />
                     </div>
 
                 </form>

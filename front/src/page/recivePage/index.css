@@ -1,0 +1,63 @@
+.receive {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.amount-field {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #e9e8eb;
+  padding: 20px 16px;
+}
+
+.system {
+  display: flex;
+  padding: 16px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.system:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.left-path-system {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.right-path-system {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-message {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 10px;
+  background: #d1f8e8;
+  color: #23622f;
+}

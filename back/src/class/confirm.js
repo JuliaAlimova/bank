@@ -7,11 +7,12 @@ class Confirm {
   }
 
   static generateCode = () => {
-    return Math.floor(Math.random() * 9000) + 1000
+    return Math.floor(Math.random() * 900000) + 100000
   }
 
   static create = (data) => {
     const confirmInstance = new Confirm(data)
+
     this.#list.push(confirmInstance)
 
     setTimeout(() => {
@@ -29,13 +30,35 @@ class Confirm {
     return length > this.#list.length
   }
 
-  static getData = (code) => {
-    const codeNumber = Number(code)
+  static getEmailByCode = (code) => {
     const obj = this.#list.find(
-      (item) => item.code === codeNumber,
+      (item) => item.code === Number(code),
     )
 
     return obj ? obj.email : null
+  }
+
+  static getByEmail = (email) => {
+    return (
+      this.#list.find((item) => item.email === email) ||
+      null
+    )
+  }
+
+  static regenerateCode = (email) => {
+    const existingConfirm = this.#list.find(
+      (item) => item.email === String(email).toLowerCase(),
+    )
+
+    if (existingConfirm) {
+      const newCode = Confirm.generateCode()
+
+      existingConfirm.code = newCode
+
+      return newCode
+    }
+
+    return null
   }
 
   static getList = () => this.#list

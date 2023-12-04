@@ -24,9 +24,11 @@ function RecoveryPage(): React.ReactElement {
         setEmail(value);
         setEmailError(!isValid);
         setErrorAuth(false);
+        setEmptyFields(false);
+        setErrorAuthMessage('');
     };
 
-    const pageStyles = {
+    const headerStyle = {
         marginBottom: '32px',
     };
 
@@ -53,9 +55,6 @@ function RecoveryPage(): React.ReactElement {
 
             const data = await res.json();
 
-            console.log(data)
-
-
             if (res.ok) {
 
                 setErrorAuthMessage('');
@@ -72,10 +71,10 @@ function RecoveryPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={pageStyles} text='Recover password' subText='Choose a recovery method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Recover password' subText='Choose a recovery method' size={sizeTitle.standart}>
             <React.Fragment>
-                <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} />
-                <Button onClick={handleRecovery} textButton={'Send code'} disabled={emailError || Boolean(!email)} />
+                <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} value={email} />
+                <Button onClick={handleRecovery} textButton={'Send code'} />
                 {errorAuth && (
                     <div className="warning">
                         <div className="user-warning">

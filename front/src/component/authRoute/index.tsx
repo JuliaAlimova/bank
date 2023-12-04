@@ -5,16 +5,20 @@ import BalancePage from "../../page/balancePage";
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (context === undefined) {
+
+    // console.log(context)
+    if (!context) {
         throw new Error('useAuth должен быть использован внутри AuthProvider');
     }
+
     return context;
 };
 
 export const AuthRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const { state } = useAuth();
 
-    console.log(state)
+    // console.log(state)
+
 
     if (state.token && state.user.isConfirm) {
         return <BalancePage />

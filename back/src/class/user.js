@@ -8,6 +8,7 @@ class User {
     this.email = String(email).toLowerCase()
     this.password = String(password)
     this.isConfirm = false
+    this.isLogged = true
   }
 
   static create(data) {
