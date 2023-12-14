@@ -14,8 +14,15 @@ export const Field: React.FC<FieldProps> = ({ value, type, label, name, placehol
             return false
         } else if (type === 'number') {
             return /^\d{6,}$/.test(value);
-        }
-        else if (type === 'email') {
+        } else if (type === 'text') {
+
+            const formattedNumericAmount = parseFloat(value.slice(1));
+
+            if (formattedNumericAmount === 0 || Math.abs(formattedNumericAmount) < Number.EPSILON) {
+                return false;
+            }
+            return true;
+        } else if (type === 'email') {
             const REG_EXP_EMAIL = /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,}$/;
             return REG_EXP_EMAIL.test(value);
         } else if (type === 'password') {
@@ -44,6 +51,8 @@ export const Field: React.FC<FieldProps> = ({ value, type, label, name, placehol
                 return 'Invalid email address. Please check and try again.';
             } else if (type === 'number') {
                 return 'Code must be at least 6 digits.';
+            } else if (type === 'text') {
+                return 'Please enter a valid amount greater than zero.';
             }
 
         }
@@ -67,13 +76,62 @@ export const Field: React.FC<FieldProps> = ({ value, type, label, name, placehol
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value;
-
         let inputValid = validateInput(value);
 
         if (type === 'number') {
-
             if (value.length >= 6) {
                 value = value.slice(0, 6);
+            }
+        }
+
+        if (onChange) {
+            onChange(value, inputValid);
+        }
+
+        if (type === 'text') {
+
+            // Удаляем все символы, кроме цифр и точек
+            value = value.replace(/[^\d.]/g, '');
+
+            // Если точка является первым символом, добавляем "0" перед точкой
+            if (value.indexOf('.') === 0) {
+                value = '0' + value;
+            }
+
+            // Удаляем ведущие нули перед целой частью числа
+            value = value.replace(/^0+(\d)/, '$1');
+
+            if (value.indexOf('.') === value.lastIndexOf('.') && e.nativeEvent instanceof KeyboardEvent && e.nativeEvent.key === '.') {
+                return; // Предотвратить ввод новой точки
+            }
+
+            // Добавляем "$" только если значение не пустое
+            if (value !== '') {
+                value = `$${value}`;
+            }
+
+            // Проверка на количество точек
+            const dotCount = value.split('.').length;
+            if (dotCount > 2) {
+                // Удалить последнюю точку
+                value = value.slice(0, -1);
+            }
+
+            // Если есть точка, разделяем на целую и десятичную части
+            const dotIndex = value.indexOf('.');
+
+            if (dotIndex !== -1) {
+                const integerPart = value.slice(0, dotIndex);
+                const decimalPart = value.slice(dotIndex + 1, dotIndex + 3);
+                const result = `${integerPart}.${decimalPart}`;
+
+                if (onChange) {
+                    onChange(result, inputValid);
+                }
+            } else {
+                if (onChange) {
+                    onChange(value, inputValid);
+                }
             }
         }
 
@@ -84,11 +142,9 @@ export const Field: React.FC<FieldProps> = ({ value, type, label, name, placehol
         if (!hasError) {
             setHasError(!inputValid && value.trim() !== '');
         }
-
-        if (onChange) {
-            onChange(value, inputValid);
-        }
     };
+
+
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
@@ -115,7 +171,7 @@ export const Field: React.FC<FieldProps> = ({ value, type, label, name, placehol
                     onFocus={handleFocus}
                     onChange={handleInputChange}
                     type={type === 'password' ? (passwordVisible ? 'text' : 'password') : type}
-                    className="field__input"
+                    className={`field__input`}
                     name={name}
                     placeholder={placeholder}
                 />

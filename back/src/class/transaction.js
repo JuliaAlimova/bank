@@ -1,27 +1,35 @@
 class Transaction {
   static #listTransactions = []
-
   static #count = 1
 
-  constructor(amount, userEmail, source, transactionType) {
+  constructor(
+    amount,
+    receiver,
+    sender,
+    srcLogo,
+    transactionType,
+  ) {
     this.id = Transaction.#count++
     this.amount = amount
-    this.userEmail = userEmail
-    this.source = source
+    this.receiver = receiver
+    this.sender = sender
+    this.srcLogo = srcLogo
     this.transactionType = transactionType
-    this.date = this.formatDate()
+    this.date = Transaction.formatDate()
   }
 
   static create = (
     amount,
-    userEmail,
-    source,
+    receiver,
+    sender,
+    srcLogo,
     transactionType,
   ) => {
     const transaction = new Transaction(
       amount,
-      userEmail,
-      source,
+      receiver,
+      sender,
+      srcLogo,
       transactionType,
     )
 
@@ -33,14 +41,26 @@ class Transaction {
   static getTransaction = (id) => {
     return (
       this.#listTransactions.find(
-        (item) => item.id === id,
+        (item) => item.id === Number(id),
       ) || null
     )
   }
 
-  static getListTransactions = () => this.#listTransactions
+  static getListTransactionsForUser = (userEmail) => {
+    return this.#listTransactions.filter(
+      (transaction) => transaction.receiver === userEmail,
+    )
+  }
 
-  formatDate = () => {
+  static updateUserEmail = (oldEmail, newEmail) => {
+    this.#listTransactions.forEach((transaction) => {
+      if (transaction.receiver === oldEmail) {
+        transaction.receiver = newEmail
+      }
+    })
+  }
+
+  static formatDate = () => {
     const date = new Date()
     const day = date.getDate()
     const month = date.toLocaleString('en-US', {

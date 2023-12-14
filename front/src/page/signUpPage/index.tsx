@@ -93,7 +93,7 @@ function SignUpPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={headerStyle} text='Sign up' subText='Choose a registration method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Sign up' subText='Choose a registration method' size={sizeTitle.STANDARD}>
             <React.Fragment>
                 <form className='form' onSubmit={handleSignup}>
                     <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signUp' onChange={handleEmailChange} value={email} />

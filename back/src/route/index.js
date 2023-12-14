@@ -16,8 +16,6 @@ router.use('/', userRouter)
 router.get('/', (req, res) => {
   const { token } = req.query
 
-  console.log(token)
-
   if (!token) {
     return res.status(400).json({
       message: 'Token is required in the query parameters.',

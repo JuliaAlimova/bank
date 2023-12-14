@@ -1,0 +1,33 @@
+.transaction {
+  display: inline-flex;
+  color: #1d1d1f;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.transaction__amount {
+  font-size: 38px;
+  font-weight: 600;
+}
+
+.transaction__amount--subNumber {
+  font-weight: 500;
+}
+
+.transaction__description {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 16px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+}
+
+.description-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}

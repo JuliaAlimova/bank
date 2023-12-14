@@ -19,6 +19,7 @@
 
 .bigSubText {
   font-size: 20px;
+  font-weight: 400;
 }
 
 .standart {
@@ -28,6 +29,7 @@
 
 .standartSubText {
   color: #939199;
+  font-weight: 400;
 }
 
 .medium {

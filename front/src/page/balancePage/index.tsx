@@ -5,7 +5,7 @@ import { sizeTitle } from '../../contexts/commonProps';
 import { Link } from 'react-router-dom';
 import { BalanceField } from '../../component/balance-field'
 import { useAuth } from '../../component/authRoute';
-import { Transaction } from '../../contexts/commonProps';
+import { TransactionProps } from '../../contexts/commonProps';
 
 
 function BalancePage(): React.ReactElement {
@@ -15,6 +15,7 @@ function BalancePage(): React.ReactElement {
         minHeight: '201px',
         borderRadius: '24px 24px 0 0',
     };
+
     const titleStyle = { color: '#F3F5FF' };
 
     const { state } = useAuth();
@@ -24,7 +25,7 @@ function BalancePage(): React.ReactElement {
 
 
     const [balance, setBalance] = useState('0');
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [transactions, setTransactions] = useState<TransactionProps[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,7 +48,6 @@ function BalancePage(): React.ReactElement {
                     setTransactions(data.user.transactions);
                 }
 
-                console.log(data)
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
@@ -59,7 +59,7 @@ function BalancePage(): React.ReactElement {
     const [integerPart, decimalPart] = balance.split('.');
 
     return (
-        <Page titleStyle={titleStyle} headerStyle={headerStyle} text='Main wallet' size={sizeTitle.small} isNotification={true} isSettings={true}>
+        <Page titleStyle={titleStyle} headerStyle={headerStyle} text='Main wallet' size={sizeTitle.SMALL} isNotification={true} isSettings={true}>
             <React.Fragment>
                 <div className="balance">
                     <span>$</span>
@@ -83,9 +83,10 @@ function BalancePage(): React.ReactElement {
                     {transactions.map(transaction =>
                     (
                         <BalanceField
+                            transactionId={transaction.id}
                             key={transaction.id}
-                            srcLogo={transaction.source === 'Stripe' ? 'svg/stripe.svg' : 'svg/coin.svg'}
-                            title={transaction.source}
+                            srcLogo={transaction.srcLogo}
+                            title={transaction.transactionType === 'Sending' ? transaction.receiver : transaction.sender}
                             date={transaction.date}
                             transactionType={transaction.transactionType}
                             amount={transaction.amount} />

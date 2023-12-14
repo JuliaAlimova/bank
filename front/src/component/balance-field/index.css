@@ -1,10 +1,18 @@
-.transaction {
+.transaction-balance {
+  text-decoration: none;
+  color: #1d1d1f;
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
   font-weight: 500;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.transaction-balance:hover {
+  transform: scale(1.05);
 }
 
 .description {
@@ -13,7 +21,7 @@
   gap: 12px;
 }
 
-.logo-background {
+.transaction-balance__logo-background {
   display: flex;
   width: 48px;
   height: 48px;
@@ -24,10 +32,15 @@
   background: #f7f7f7;
 }
 
+.transaction-balance__logo {
+  border-radius: 100%;
+}
+
 .details {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-items: flex-start;
 }
 
 .operation {

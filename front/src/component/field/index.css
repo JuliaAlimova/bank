@@ -19,6 +19,7 @@
   border-radius: 12px;
   transition: border-color 0.3s;
   padding-right: calc(18px + 18px + 18px);
+  background: #fff;
 }
 
 .field__input:focus {

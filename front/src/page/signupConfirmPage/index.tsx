@@ -77,7 +77,7 @@ function SignupConfirmPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={headerStyle} text='Confirm account' subText='Write the code you received' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Confirm account' subText='Write the code you received' size={sizeTitle.STANDARD}>
             <React.Fragment>
                 <Field type={'number'} name={'code'} placeholder={'123456'} label={'Code'} onChange={handleCodeChange} value={code} />
                 <Button onClick={handleSignupConfirm} textButton={'Confirm'} disabled={!isValid || Boolean(!code)} />

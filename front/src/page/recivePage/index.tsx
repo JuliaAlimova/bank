@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import './index.css';
 import { Page } from '../../component/page';
-import { sizeTitle } from '../../contexts/commonProps';
+import { SrcLogo, ActionType, NotificationType, sizeTitle } from '../../contexts/commonProps';
 import { Divider } from '../../component/divider';
 import { useAuth } from '../../component/authRoute';
+import { Field } from '../../component/field';
 
 function RecivePage(): React.ReactElement {
 
@@ -21,44 +22,13 @@ function RecivePage(): React.ReactElement {
 
     const [amount, setAmount] = useState('');
 
-    const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeAmount = (value: string) => {
+        setAmount(value);
         setError(false);
         setSuccess(false);
-
-        let input = e.target.value;
-
-        // Удаляем все символы, кроме цифр и точек
-        input = input.replace(/[^\d.]/g, '');
-
-        // Если точка является первым символом, добавляем "0" перед точкой
-        if (input.indexOf('.') === 0) {
-            input = '0' + input;
-        }
-
-        // Удаляем ведущие нули перед целой частью числа
-        input = input.replace(/^0+(\d)/, '$1');
-
-        // Запрещаем более одной точки в числе
-        if (input.indexOf('.') !== input.lastIndexOf('.')) {
-            return;
-        }
-
-        // Форматируем значение с учетом знака "$"
-        const formattedValue = `$${input}`;
-
-        // Если есть точка, разделяем на целую и десятичную части
-        const dotIndex = formattedValue.indexOf('.');
-        if (dotIndex !== -1) {
-            const integerPart = formattedValue.slice(0, dotIndex);
-            const decimalPart = formattedValue.slice(dotIndex + 1, dotIndex + 3);
-            const result = `${integerPart}.${decimalPart}`;
-            setAmount((prevAmount) => (prevAmount !== result ? result : prevAmount));
-        } else {
-            setAmount((prevAmount) => (prevAmount !== formattedValue ? formattedValue : prevAmount));
-        }
     };
 
-    const handlePaymentSystemClick = async (paymentSystem: string) => {
+    const handlePaymentSystemClick = async (sender: string, srcLogoTransaction: SrcLogo) => {
         try {
             const numericAmount = parseFloat(amount.slice(1));
             const formattedNumericAmount = numericAmount.toFixed(2);
@@ -69,10 +39,14 @@ function RecivePage(): React.ReactElement {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    formattedNumericAmount,
-                    paymentSystem,
                     token,
-                    currentEmail
+                    formattedNumericAmount,
+                    receiver: currentEmail,
+                    sender,
+                    srcLogoTransaction,
+                    srcLogoNotification: SrcLogo.BELL,
+                    actionType: ActionType.RECEIVE,
+                    notificationType: NotificationType.RECEIVE,
                 }),
             });
 
@@ -93,12 +67,12 @@ function RecivePage(): React.ReactElement {
     }
 
     return (
-        <Page pageStyle={pageStyle} backButtonTitle={true} text='Receive' size={sizeTitle.medium} >
+        <Page pageStyle={pageStyle} backButtonTitle={true} text='Receive' size={sizeTitle.MEDIUM} >
             <div className='receive'>
 
                 <div className='block'>
                     <span className='title'>Receive amount</span>
-                    <input className='amount-field' type={'text'} name={'amount'} placeholder={'Enter amount'} value={amount} onChange={handleChangeAmount} />
+                    <Field type={'text'} name={'amount'} placeholder={'Enter amount'} onChange={handleChangeAmount} value={amount} />
                 </div>
 
                 <Divider />
@@ -106,7 +80,7 @@ function RecivePage(): React.ReactElement {
                 <div className='block'>
                     <span className='title'>Payment system</span>
 
-                    <div className='system' onClick={() => handlePaymentSystemClick('Stripe')}>
+                    <div className='system' onClick={() => handlePaymentSystemClick('Stripe', SrcLogo.STRIPE)}>
                         <div className='left-path-system'>
                             <img src="/svg/stripe.svg" alt="stripe" />
                             <span className='title'>Stripe</span>
@@ -121,7 +95,7 @@ function RecivePage(): React.ReactElement {
                         </div>
                     </div>
 
-                    <div className='system' onClick={() => handlePaymentSystemClick('Coinbase')}>
+                    <div className='system' onClick={() => handlePaymentSystemClick('Coinbase', SrcLogo.COINBASE)}>
                         <div className='left-path-system'>
                             <img src="/svg/coin.svg" alt="coinbase" />
                             <span className='title'>Coinbase</span>

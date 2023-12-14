@@ -4,7 +4,7 @@ import { useAuth } from '../../component/authRoute';
 import { Page } from '../../component/page';
 import { Button } from '../../component/button';
 import { Field } from '../../component/field';
-import { sizeTitle } from '../../contexts/commonProps';
+import { SrcLogo, ActionType, NotificationType, sizeTitle } from '../../contexts/commonProps';
 
 function SignInPage(): React.ReactElement {
     const headerStyle = {
@@ -60,6 +60,9 @@ function SignInPage(): React.ReactElement {
                     email: email,
                     password: password,
                     token: token,
+                    srcLogo: SrcLogo.DANGER,
+                    actionType: ActionType.LOGIN,
+                    notificationType: NotificationType.LOGIN,
                 }),
             });
 
@@ -90,10 +93,10 @@ function SignInPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={headerStyle} text='Sign in' subText='Select login method' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Sign in' subText='Select login method' size={sizeTitle.STANDARD}>
             <React.Fragment>
                 <form className='form' onSubmit={handleSignin}>
-                    <Field type={'email'} name={'email'} placeholder={'example@gmail.com'} label={'Email'} formType='signIn' onChange={handleEmailChange} value={email} />
+                    <Field type={'email'} name={'email'} placeholder='example@gmail.com' label='Email' formType='signIn' onChange={handleEmailChange} value={email} />
                     <Field type={'password'} name={'password'} placeholder={'Enter your password'} label={'Password'} formType='signIn' onChange={handlePasswordChange} value={password} />
                     <div>{'Forgot your password? '}
                         <Link className='link' to={"/recovery"}>Restore</Link>

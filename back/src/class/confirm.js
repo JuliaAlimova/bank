@@ -18,6 +18,8 @@ class Confirm {
     setTimeout(() => {
       this.delete(confirmInstance.code)
     }, 24 * 60 * 60 * 1000)
+
+    return confirmInstance
   }
 
   static delete = (code) => {
@@ -28,6 +30,14 @@ class Confirm {
     )
 
     return length > this.#list.length
+  }
+
+  static getCode = (code) => {
+    return (
+      this.#list.find(
+        (item) => item.code === Number(code),
+      ) || null
+    )
   }
 
   static getEmailByCode = (code) => {
@@ -59,6 +69,17 @@ class Confirm {
     }
 
     return null
+  }
+
+  static updateEmail = (oldEmail, newEmail) => {
+    const confirmInstance = this.#list.find(
+      (item) =>
+        item.email === String(oldEmail).toLowerCase(),
+    )
+
+    if (confirmInstance) {
+      confirmInstance.email = String(newEmail).toLowerCase()
+    }
   }
 
   static getList = () => this.#list

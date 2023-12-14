@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './index.css';
 import { Page } from '../../component/page';
-import { sizeTitle } from '../../contexts/commonProps';
+import { SrcLogo, ActionType, NotificationType, sizeTitle } from '../../contexts/commonProps';
 import { Field } from '../../component/field';
 import { Button } from '../../component/button';
 import { Divider } from '../../component/divider';
@@ -78,6 +78,9 @@ function SettingsPage(): React.ReactElement {
                     newEmail,
                     currentPassword,
                     currentEmail,
+                    srcLogo: SrcLogo.DANGER,
+                    actionType: ActionType.NEWEMAIL,
+                    notificationType: NotificationType.NEWEMAIL,
                 }),
             });
 
@@ -127,7 +130,10 @@ function SettingsPage(): React.ReactElement {
                     token,
                     currentEmail,
                     oldPassword,
-                    newPassword
+                    newPassword,
+                    srcLogo: SrcLogo.DANGER,
+                    actionType: ActionType.NEWPASSWORD,
+                    notificationType: NotificationType.NEWPASSWORD,
                 }),
             });
 
@@ -165,7 +171,7 @@ function SettingsPage(): React.ReactElement {
     }
 
     return (
-        <Page backButtonTitle={true} text='Settings' size={sizeTitle.medium} >
+        <Page backButtonTitle={true} text='Settings' size={sizeTitle.MEDIUM} >
             <div className='settings'>
 
                 <form className='block' onSubmit={handleChangeEmail}>

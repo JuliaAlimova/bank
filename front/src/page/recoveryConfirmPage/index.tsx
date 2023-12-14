@@ -4,10 +4,12 @@ import { useAuth } from '../../component/authRoute';
 import { Page } from '../../component/page';
 import { Button } from '../../component/button';
 import { Field } from '../../component/field';
-import { sizeTitle } from '../../contexts/commonProps';
+import { SrcLogo, ActionType, NotificationType, sizeTitle } from '../../contexts/commonProps';
 
 function RecoveryConfirmPage(): React.ReactElement {
     const navigate = useNavigate();
+    const { dispatch } = useAuth();
+
     const { state } = useAuth();
     const token = state.token;
 
@@ -16,7 +18,8 @@ function RecoveryConfirmPage(): React.ReactElement {
     };
 
     const [code, setCode] = useState('');
-    const [codeError, setCodeError] = useState('');
+    const [codeError, setCodeError] = useState(false);
+    const [codeErrorMessage, setCodeErrorMessage] = useState('');
     const [isValid, setIsValid] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
@@ -26,13 +29,14 @@ function RecoveryConfirmPage(): React.ReactElement {
         setCode(value);
         setEmptyFields(false);
         setIsValid(isValid);
-        setCodeError('');
+        setCodeError(false);
     };
 
     const handlePasswordChange = (value: string, isValid: boolean) => {
         setPassword(value);
         setEmptyFields(false);
         setPasswordError(!isValid);
+        setCodeError(false);
     };
 
     const handleRecoveryConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,21 +60,33 @@ function RecoveryConfirmPage(): React.ReactElement {
                     password: password,
                     code: code,
                     token: token,
-
+                    srcLogo: SrcLogo.DANGER,
+                    actionType: ActionType.RECOVERY,
+                    notificationType: NotificationType.RECOVERY,
                 }),
             });
 
             const data = await res.json();
 
             if (res.ok) {
+                dispatch({
+                    type: 'LOGIN',
+                    payload: {
+                        token: data.token,
+                        user: data.user,
+                    }
+                });
+
                 localStorage.setItem('authState', JSON.stringify({ data, expirationTime: new Date().getTime() + 60 * 60 * 1000, }));
 
                 setEmptyFields(false);
                 setPasswordError(false);
                 setIsValid(false);
+                setCodeError(false);
                 navigate('/balance');
             } else {
-                setCodeError(data.message);
+                setCodeError(true);
+                setCodeErrorMessage(data.message);
             }
         } catch (e) {
             console.error(e);
@@ -78,7 +94,7 @@ function RecoveryConfirmPage(): React.ReactElement {
     }
 
     return (
-        <Page backButton={true} headerStyle={headerStyle} text='Recover password' subText='Write the code you received' size={sizeTitle.standart}>
+        <Page backButton={true} headerStyle={headerStyle} text='Recover password' subText='Write the code you received' size={sizeTitle.STANDARD}>
             <React.Fragment>
                 <form className='form' onSubmit={handleRecoveryConfirm}>
 
@@ -94,7 +110,7 @@ function RecoveryConfirmPage(): React.ReactElement {
                     <div className='warning'>
                         <div className="user-warning">
                             <img src='/svg/danger.svg' alt='danger' />
-                            <span>{codeError}</span>
+                            <span>{codeErrorMessage}</span>
                         </div>
                     </div>
                 )}

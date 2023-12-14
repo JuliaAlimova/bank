@@ -24,7 +24,7 @@ function WellcomePage(): React.ReactElement {
     };
 
     return (
-        <Page titleStyle={titleStyle} headerStyle={headerStyle} text='Hello!' size={sizeTitle.big} subText='Welcome to bank app' >
+        <Page titleStyle={titleStyle} headerStyle={headerStyle} text='Hello!' size={sizeTitle.BIG} subText='Welcome to bank app' >
             <div className='buttons'>
                 <Button textButton={'Sign Up'} onClick={redirectToSignUp} />
                 <Button textButton={'Sign In'} onClick={redirectToSignIn} />

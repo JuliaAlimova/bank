@@ -1,14 +1,34 @@
 export enum sizeTitle {
-    big = 'big',
-    standart = 'standart',
-    medium = 'medium',
-    small = 'small'
+    BIG = 'big',
+    STANDARD = 'standart',
+    MEDIUM = 'medium',
+    SMALL = 'small'
 }
 
-enum SrcLogo {
-    Stripe = '/svg/stripe.svg',
-    Coinbase = '/svg/coin.svg',
-    User = '/svg/user.svg',
+export enum SrcLogo {
+    STRIPE = '/svg/stripe.svg',
+    COINBASE = '/svg/coin.svg',
+    USER = '/svg/user.svg',
+    DANGER = '/svg/danger-red.svg',
+    BELL = '/svg/bell-ringing.svg',
+}
+
+export enum ActionType {
+    LOGIN = 'New login',
+    RECOVERY = 'Password recovery',
+    NEWPASSWORD = 'Password change',
+    NEWEMAIL = 'Email change',
+    RECEIVE = 'New reward system',
+    SEND = 'New send reward',
+}
+
+export enum NotificationType {
+    LOGIN = 'Warning',
+    RECOVERY = 'Warning',
+    NEWPASSWORD = 'Warning',
+    NEWEMAIL = 'Warning',
+    RECEIVE = 'Announcement',
+    SEND = 'Announcement',
 }
 
 
@@ -41,13 +61,14 @@ export interface FieldProps {
     placeholder: string,
     name: string,
     type: string,
-    label: string,
+    label?: string,
     formType?: 'signIn' | 'signUp';
     onChange?: (value: string, isValid: boolean) => void;
     value?: string;
 }
 
 export interface BalanceFieldProps {
+    transactionId: number,
     srcLogo: string,
     title: string,
     date: string,
@@ -55,12 +76,22 @@ export interface BalanceFieldProps {
     amount: string,
 }
 
-export interface Transaction {
+export interface NotificationFieldProps {
+    id?: number,
+    srcLogo: string,
+    date: string,
+    actionType: string,
+    notificationType: string,
+}
+
+export interface TransactionProps {
     key: number;
-    srcLogo: string | SrcLogo,
+    sender: string;
+    srcLogo: SrcLogo,
     id: number;
     date: string;
     amount: string;
     transactionType: string;
     source: string;
+    receiver: string;
 }

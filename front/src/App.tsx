@@ -11,15 +11,16 @@ import RecoveryPage from "./page/recoveryPage";
 import RecoveryConfirmPage from "./page/recoveryConfirmPage";
 import SettingsPage from "./page/settingsPage";
 import RecivePage from "./page/recivePage";
-
-// NotificationsPage, RecivePage, SendPage, TransactionPage
+import TransactionPage from "./page/transactionPage";
+import NotificationsPage from "./page/notificationsPage";
+import SendPage from "./page/sendPage";
 
 function App() {
 
   const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const { state } = useAuth();
 
-    console.log(state)
+    // console.log(state)
 
     if (state.token && state.user.isConfirm) {
       return children
@@ -99,15 +100,14 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* <Route
-                path="/notifications"
-                element={
-                  <PrivateRoute>
-                    <NotificationsPage />
-                  </PrivateRoute>
-                }
-              />
-              */}
+          <Route
+            path="/notifications"
+            element={
+              <PrivateRoute>
+                <NotificationsPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/settings"
             element={
@@ -124,23 +124,24 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/*<Route
-                path="/send"
-                element={
-                  <PrivateRoute>
-                    <SendPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/transaction/:transactionId"
-                element={
-                  <PrivateRoute>
-                    <TransactionPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="*" Component={Error} />  */}
+          {<Route
+            path="/send"
+            element={
+              <PrivateRoute>
+                <SendPage />
+              </PrivateRoute>
+            }
+          />
+          }
+          <Route
+            path="/transaction/:transactionId"
+            element={
+              <PrivateRoute>
+                <TransactionPage />
+              </PrivateRoute>
+            }
+          />
+          {/* <Route path="*" Component={Error} />  */}
         </Routes>
       </BrowserRouter>
     </AuthProvider >

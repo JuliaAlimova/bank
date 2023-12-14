@@ -37,42 +37,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const savedState = localStorage.getItem('authState');
 
-        if (savedState) {
-            const parsedState = JSON.parse(savedState);
-            const currentTime = new Date().getTime();
+        const fetchData = async () => {
+            try {
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    const currentTime = new Date().getTime();
 
-            console.log(parsedState.data.token)
+                    const res = await fetch(`http://localhost:4000?token=${parsedState.data.token}`)
 
-            fetch(`http://localhost:4000?token=${parsedState.data.token}`)
-                .then(response => response.json())
-                .then(userExists => {
-                    if (userExists && currentTime >= parsedState.expirationTime) {
+                    const data = await res.json();
+
+                    // console.log(data)
+
+                    if (res.ok) {
+
+                        if (data.user && currentTime >= parsedState.expirationTime) {
+                            dispatch({ type: 'LOGOUT' });
+                            localStorage.removeItem('authState');
+                        } else if (data) {
+                            dispatch({
+                                type: 'LOGIN',
+                                payload: {
+                                    token: data.token,
+                                    user: data.user
+                                }
+                            });
+                        } else {
+                            dispatch({
+                                type: 'LOGIN',
+                                payload: {
+                                    token: parsedState.data.token,
+                                    user: parsedState.data.user
+                                }
+                            });
+                        }
+                    } else {
                         dispatch({ type: 'LOGOUT' });
                         localStorage.removeItem('authState');
-                    } else if (userExists) {
-                        dispatch({
-                            type: 'LOGIN',
-                            payload: {
-                                token: userExists.token,
-                                user: userExists.user
-                            }
-                        });
-                    } else {
-                        dispatch({
-                            type: 'LOGIN',
-                            payload: {
-                                token: parsedState.data.token,
-                                user: parsedState.data.user
-                            }
-                        });
+                        console.log(data.message)
                     }
-                })
-                .catch(error => {
-                    console.error('Error checking user existence:', error);
-                    dispatch({ type: 'LOGOUT' });
-                });
-        }
+                }
+            } catch (error) {
+                console.error('Error checking user existence:', error);
+            }
 
+        };
+
+        fetchData();
     }, [dispatch]);
 
     return (

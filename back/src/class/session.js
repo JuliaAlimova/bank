@@ -57,7 +57,7 @@ class Session {
     return null
   }
 
-  static updateBalance(userEmail, amount) {
+  static updateBalance(userEmail, amount, transactionType) {
     const session = this.#list.find(
       (session) =>
         session.user.email ===
@@ -66,7 +66,10 @@ class Session {
 
     if (session) {
       const newBalance = (
-        Number(session.user.balance) + Number(amount)
+        Number(session.user.balance) +
+        (transactionType === 'Sending'
+          ? -Number(amount)
+          : Number(amount))
       ).toFixed(2)
       session.user.balance = newBalance
       return newBalance
