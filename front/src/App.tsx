@@ -14,13 +14,12 @@ import RecivePage from "./page/recivePage";
 import TransactionPage from "./page/transactionPage";
 import NotificationsPage from "./page/notificationsPage";
 import SendPage from "./page/sendPage";
+import Error from "./component/error";
 
 function App() {
 
   const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const { state } = useAuth();
-
-    // console.log(state)
 
     if (state.token && state.user.isConfirm) {
       return children
@@ -141,7 +140,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* <Route path="*" Component={Error} />  */}
+          <Route path="*" Component={Error} />
         </Routes>
       </BrowserRouter>
     </AuthProvider >
